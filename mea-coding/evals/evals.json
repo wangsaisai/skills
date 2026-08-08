@@ -1,0 +1,44 @@
+{
+  "skill_name": "mea-coding",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我实现一个 remember-me 登录功能：用户勾选记住我后，token 要在浏览器关闭后仍然有效，刷新页面保持登录状态；如果 token 失效要自动跳回登录页。项目在 src/ 下，是 React + Express，测试用 vitest。这是个比较重要的功能，希望你一步一步来，每一步做一点就验证一下，不要一口气全写完再告诉我完成了。",
+      "expected_output": "按 MEA 流程：先产出需求清单+可核验验收标准+边界；然后每轮只做一个有界子任务，并在每轮后用真实命令输出（npm test/vitest 输出、git diff --stat）作为审计证据；状态账本里只有 verified 的条目带证据；最终总审计后给出总结，而不是一次性大改完。",
+      "results": [
+        {
+          "iteration": "iteration-1",
+          "date": "2026-08-08",
+          "with_skill": { "pass": 11, "fail": 0, "markers": 14, "note": "契约清单+账本+每轮审计证据齐全；新增 remember-me.test.js 7 个用例并纳入 git" },
+          "without_skill": { "pass": 9, "fail": 0, "markers": 0, "note": "仅结尾一次性验证，无结构；login.test.js 未跟踪 git" }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "这个仓库有个 bug：用户上传 CSV 后偶尔报错 'Unexpected end of input'。帮我查一下根因并修复。这个问题不好定位，可能要查很多地方，请像做手术一样小心：先规划，每步验证，别把其他功能搞坏。",
+      "expected_output": "先立契约（验收=根因有证据支撑+修复后跑对应测试+回归测试通过+git diff 范围小）；定位过程用事实 F 记录证据链；修复是一个有界子任务；审计时跑上传相关测试与全量回归，贴真实输出；如果卡住会停下来问用户而不是瞎改。",
+      "results": [
+        {
+          "iteration": "iteration-1",
+          "date": "2026-08-08",
+          "with_skill": { "pass": 2, "fail": 0, "marker_count": 12, "note": "状态机重写 parseCsv，真实数据文件+边界断言双重验收" },
+          "without_skill": { "pass": 2, "fail": 0, "marker": 5, "note": "同样状态机方案，验证集中在结尾" }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "把项目里的 PDF 解析模块重构一下，现在 PDF.js 的依赖太老了要升级，还要拆出一个独立的 parse 函数方便复用。重构完记得保持所有现有功能不变。",
+      "expected_output": "契约包含'不改变外部行为'的可核验标准（全量测试通过、API 兼容性检查、diff 范围限定）；升级依赖与拆函数是两个有界子任务分别做；每轮审计有测试输出；总审计跑完整套件。",
+      "results": [
+        {
+          "iteration": "iteration-1",
+          "date": "2026-08-08",
+          "with_skill": { "pass": 1, "fail": 0, "marker": 11, "note": "明确'行为不变'硬性验收，diff 最小化（app.js -3/+2 + 新增 parse.js）" },
+          "without_skill": { "pass": 1, "fail": 0, "marker": 3, "note": "相似方案，未跟踪新文件 parse.js" }
+        }
+      ]
+    }
+  ]
+}
