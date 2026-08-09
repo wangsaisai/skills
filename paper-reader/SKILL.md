@@ -24,7 +24,7 @@ description: >
 ## 二、工作流（7 步）
 
 ```
-用户输入 → Step 0 准备文件夹 → Step 1 解析原文 → Step 2 完整翻译 → Step 3 通俗解读 → Step 4 生成索引 → Step 5 交付与验收
+用户输入 → Step 0 准备文件夹 → Step 1 解析原文 → Step 2 完整翻译 → Step 3 通俗解读 → Step 4 生成论文架构图 → Step 5 生成索引 → Step 6 交付与验收
 ```
 
 ### Step 0 — 确定主题、目标目录并移动论文
@@ -78,7 +78,9 @@ description: >
 papers/<topic>/<paper-slug>/
 ├── <原始文件名>.pdf      # 论文原文（mv 至此，文件名不变）
 ├── translation.md        # 完整翻译
-└── interpretation.md     # 通俗解读
+├── interpretation.md     # 通俗解读
+├── architecture.drawio   # 论文架构图（drawio-skill 生成）
+└── architecture.drawio.png # 架构图导出 PNG（嵌入 XML，双击可编辑）
 ```
 
 ### Step 1 — 解析原文
@@ -214,7 +216,26 @@ papers/<topic>/<paper-slug>/
 
 **输出文件**：`papers/<topic>/<paper-slug>/interpretation.md`
 
-### Step 4 — 生成/更新索引
+### Step 4 — 生成论文架构图
+
+> **用 `drawio-skill` 生成**：加载 `drawio-skill`，按其 SKILL.md 的流程与规范执行（含 draw.io CLI 导出）。
+
+**目标**：用一张架构图呈现论文"系统怎么解决这个问题"的全景——输入 → 核心组件/模块 → 数据流 → 输出，让读者 30 秒看懂论文骨架。
+
+**要求**：
+
+1. **忠实原文**：图中只画论文原文中出现的组件、模块、流程与数据流，不脑补不存在的内容
+2. **图主题**：论文方法/系统全景图（单篇一个架构图）。架构类论文画系统组件与数据流；方法类论文画训练/推理流水线或算法流程；纯理论论文画核心框架与证明依赖关系
+3. **画图步骤**：
+   - 基于 `translation.md` / `interpretation.md` 确定图的核心组件与连接关系（组件 3-15 个，过多则分层：系统层、模块层）
+   - 按 `drawio-skill` 的 SKILL.md 生成 `.drawio` XML 并本地导出 PNG/SVG
+   - 组件命名用中英对照（如"向量索引（Vector Index）"），与解读一致
+4. **输出文件**（放在论文文件夹内）：
+   - 源文件 `papers/<topic>/<paper-slug>/architecture.drawio`
+   - 导出图 `papers/<topic>/<paper-slug>/architecture.drawio.png`（用 `--embed-diagram` 导出，双击可恢复编辑）
+5. **失败降级**：draw.io CLI 不可用 / 导出失败时，告知用户并保留 `.drawio` 源文件，不阻塞其他步骤
+
+### Step 5 — 生成/更新索引
 
 在 `papers/README.md` 中维护论文索引，包含两部分：
 
@@ -244,12 +265,12 @@ papers/<topic>/<paper-slug>/
 - 每次新增论文时在对应主题下追加一行，并更新主题分类表中的论文数量。
 - 如果 `papers/README.md` 不存在则创建。
 
-### Step 5 — 交付与验收
+### Step 6 — 交付与验收
 
 全部产物写出后向用户交付：
 
 1. 简述论文归属（`papers/<topic>/<slug>/`）、是否新建了主题/子主题
-2. 给出产物清单：原 PDF 位置、`translation.md`（篇幅）、`interpretation.md`
+2. 给出产物清单：原 PDF 位置、`translation.md`（篇幅）、`interpretation.md`、`architecture.drawio(.png)`
 3. 提示关键差异点：如文章过长采用分段、arXiv 无 PDF 用摘要页、产物为覆盖/更新
 4. 请用户抽查翻译某一段，或确认整体可接受；本次处理才算完成，用户反馈的问题立即修正
 
@@ -284,7 +305,7 @@ papers/<topic>/<paper-slug>/
 只解读这篇论文 2401.12345
 ```
 
-默认两个都做。用户明确说"只翻译"或"只解读"时，跳过另一个。
+默认翻译、解读、架构图都做。用户明确说"只翻译"或"只解读"时，只做指定的那个（其余含架构图一并跳过）；用户明确不要架构图时跳过 Step 4。
 
 ## 四、翻译质量检查清单
 
