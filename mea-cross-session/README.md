@@ -42,6 +42,23 @@
 
 **与 mea-coding 的分工（在 DSH 里）**：任务长、子任务边界清晰、想隔离验证或并行 → **mea-cross-session**（子代理三班倒）；短小、单轮、或想全程亲盯逐步验收 → **mea-coding**（主会话内分饰三角）。两者可混用：外层 mea-cross-session 分派子代理，子代理内部按 mea-coding 纪律干活。
 
+## 载体适配速查（跨会话消息 / subagent / 纯单会话）
+
+同一套 MEA 骨架，按载体的"会话能力"选适配方式（判定维度只有一个：**角色之间能不能物理隔离成独立上下文**）：
+
+| 载体能力 | 代表环境 | 适配方式 | 消息通道 |
+|---|---|---|---|
+| 跨会话消息，或可跨轮唤醒的子代理 | DSH（后台 subagent + send_message）、Claude Code ≥ v2.1.224 | **mea-cross-session 原版** | 会话间消息 / 子代理启动 prompt + 完成通知 + send_message |
+| 有 subagent，无跨会话消息 | OpenCode（agent/subagent 机制）、Claude Code 老版本（.claude/agents） | **mea-cross-session 拓扑**，通道换成"主会话编排" | subagent 的 prompt 参数 + 返回值（干完即弃，失败重调） |
+| 纯单会话，无 subagent | 任何裸终端 | **mea-coding**（主会话内分饰三角） | 无（同一会话切换视角） |
+
+subagent 编排版的两点差异（其余机制完全一致：契约先行、只读审计、TASK_STATE.md 唯一持久记忆、只记验证过的事实）：
+
+1. **子代理是一次性调用而非可唤醒会话**：失败/恢复 = 重新调用 subagent（用账本里的契约重发），而非跨会话消息的"重发消息唤醒"。
+2. **管理者（主）会话必须长活**：主会话一断，一切以 `TASK_STATE.md` 为准，换新会话从账本重排；不要依赖子代理侧的记忆。
+
+选型口诀：**能物理隔离角色 → cross-session 拓扑；不能 → mea-coding。** 通道（跨会话消息 / subagent 编排）只是实现细节，不改变选型。
+
 ## 提示词控制：用哪个 skill 由你怎么说决定
 
 **控制原理**：DSH 的 skill 按名字或 description 触发——提示词里**点名 skill 名**最可靠（描述匹配可能因两个 skill 文案重叠而误触发）。三档写法：
