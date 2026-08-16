@@ -17,7 +17,7 @@
 jira_search  jql="project = PROJ AND status = Open ORDER BY priority DESC, created ASC"  maxResults=50
 ```
 
-常用 JQL 片段：
+常用 JQL 片段（字段/运算符/函数/相对日期/排序的完整参考见 `references/jql-reference.md`）：
 
 ```jql
 -- 指派给我且未解决

@@ -100,13 +100,15 @@ assignee = currentUser() AND status NOT IN (Done, Closed) AND priority >= High
 # 本周新增的 Bug
 issuetype = Bug AND created >= startOfWeek() ORDER BY priority DESC
 
-# 进行中且含子任务的 Epic
-issuetype = Epic AND status = "In Progress" AND issueFunction in hasLinks("is parent of")
+# 某个 Epic 下的全部子任务
+parent = PROJ-100
 
 # 我最近更新过的 issue
-updatedBy = currentUser() AND updated >= -7d ORDER BY updated DESC
+# 注意：updatedBy 是 JQL 函数而非字段，写法为 issuekey IN updatedBy(...)；时间粒度最小 1 天（仅 DC 8.22.3+ / Cloud 支持）
+issuekey IN updatedBy(currentUser(), "-7d") ORDER BY updated DESC
 
 # 被阻塞的 issue
+# 注意："Flagged" 是自定义字段（Cloud 默认名），内网实例字段名/取值以实际配置为准
 status = Blocked OR "Flagged" = "Impediment"
 
 # 关联到指定 Epic 的 issue
