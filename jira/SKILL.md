@@ -55,7 +55,7 @@ metadata:
 
 | 操作 | 工具 | 说明 |
 |------|------|------|
-| 搜索 | `jira_search` | JQL 查询；**先加 `maxResults=1` 验证再全量执行** |
+| 搜索 | `jira_search` | JQL 查询；**先加 `maxResults=1` 验证再全量执行**（JQL 语法见 `references/jql-reference.md`） |
 | 查详情 | `jira_get_issue` | 获取 issue 字段、评论、附件 |
 | 创建 | `jira_create_issue` | 创建前确认必填字段（project、issuetype、summary 等） |
 | 更新 | `jira_update_issue` | 改字段、描述、assignee |
@@ -94,4 +94,5 @@ metadata:
 - `references/mcp-setup.md` — 两种接入方案的完整配置（含内网 URL）
 - `references/authentication.md` — API Token / PAT / OAuth 2.1 详细配置
 - `references/jira-operations.md` — JQL 语法、issue CRUD、流转、评论、附件、sprint
+- `references/jql-reference.md` — JQL 完整参考（字段/运算符/函数/相对日期/排序/复杂示例），写查询前查这张表
 - `references/security.md` — 安全与合规清单
